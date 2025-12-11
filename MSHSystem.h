@@ -26,7 +26,7 @@ public:
 private:
     void displayMainMenu();
     void handleUserSelection(int selection);
-    void showHomeStatus() const; // Option 1
+    void showHomeStatus() const;
 
     SystemMode currentMode;
     SystemState currentState;

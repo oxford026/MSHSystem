@@ -2,6 +2,55 @@
 #include <iostream>
 #include <cstdlib>
 #include <limits>
+#include <string>
+
+MSHSystem::MSHSystem()
+    : currentMode(SystemMode::Normal),
+      currentState(SystemState::Normal) {}
+
+// Helper functions to convert enums to string
+static std::string modeToString(SystemMode mode)
+{
+    switch (mode)
+    {
+    case SystemMode::Normal:
+        return "Normal";
+    case SystemMode::Evening:
+        return "Evening";
+    case SystemMode::Party:
+        return "Party";
+    case SystemMode::Cinema:
+        return "Cinema";
+    }
+    return "Unknown";
+}
+
+static std::string stateToString(SystemState state)
+{
+    switch (state)
+    {
+    case SystemState::Normal:
+        return "Normal";
+    case SystemState::Sleep:
+        return "Sleep";
+    case SystemState::HighPerformance:
+        return "High Performance";
+    }
+    return "Unknown";
+}
+
+void MSHSystem::showHomeStatus() const
+{
+    std::cout << "\n=== HOME STATUS ===\n";
+    std::cout << "Current Mode : " << modeToString(currentMode) << "\n";
+    std::cout << "Current State: " << stateToString(currentState) << "\n";
+
+    std::cout << "\nDevices:\n";
+    std::cout << "  (No devices registered yet - device subsystem integration pending.)\n";
+
+    std::cout << "\nPress Enter to return to the main menu...\n";
+    std::cin.get();
+}
 
 void MSHSystem::run()
 {
@@ -10,7 +59,9 @@ void MSHSystem::run()
         displayMainMenu();
 
         int choice;
-        if (!(std::cin >> choice))
+        std::cin >> choice;
+
+        if (!std::cin)
         {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
