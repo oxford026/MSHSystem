@@ -59,9 +59,7 @@ void MSHSystem::run()
         displayMainMenu();
 
         int choice;
-        std::cin >> choice;
-
-        if (!std::cin)
+        if (!(std::cin >> choice))
         {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -97,6 +95,10 @@ void MSHSystem::handleUserSelection(int selection)
     case 0:
         std::cout << "Exiting...\n";
         std::exit(0);
+
+    case 1:
+        showHomeStatus();
+        break;
 
     case 8:
         std::cout << "\n=== MANUAL ===\n";
