@@ -1,0 +1,10 @@
+^C:\USERS\RAOUF\ONEDRIVE\DESKTOP\MSH-NEW\BUILD\CMAKEFILES\67D7E5E5C265078F656B0053BDD0B44E\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/raouf/OneDrive/Desktop/MSH-New -BC:/Users/raouf/OneDrive/Desktop/MSH-New/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/raouf/OneDrive/Desktop/MSH-New/build/MSHNew.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
