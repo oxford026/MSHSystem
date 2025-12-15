@@ -1,0 +1,40 @@
+void MSHSystem::changeMode() {
+    while (true) {
+        std::cout << "Change Mode: [N]ormal [E]vening [P]arty [C]inema\n";
+        std::cout << "Enter choice: ";
+
+        char choice;
+        std::cin >> choice;
+        choice = static_cast<char>(std::toupper(static_cast<unsigned char>(choice)));
+
+        std::string oldMode = currentMode ? currentMode->name() : "None";
+        std::unique_ptr<Mode> newMode;
+
+        if (choice == 'N') {
+            newMode = std::make_unique<NormalMode>();
+        } else if (choice == 'E') {
+            newMode = std::make_unique<EveningMode>();
+        } else if (choice == 'P') {
+            newMode = std::make_unique<PartyMode>();
+        } else if (choice == 'C') {
+            newMode = std::make_unique<CinemaMode>();
+        } else {
+            std::cout << "Invalid selection. Try again.\n";
+            continue;
+        }
+
+        currentMode = std::move(newMode);
+        currentMode->apply(*this);
+
+        std::cout << "Mode changed to " << currentMode->name() << std::endl;
+
+        // Logging (if Logger exists in the project)
+        // Logger::getInstance().log(
+        //     "ModeChange",
+        //     oldMode + " -> " + currentMode->name(),
+        //     "Success"
+        // );
+
+        break;
+    }
+}
