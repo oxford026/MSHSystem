@@ -1,5 +1,4 @@
-#ifndef HIGHPERFORMANCESTATE_H
-#define HIGHPERFORMANCESTATE_H
+#pragma once
 
 #include "State.h"
 
@@ -8,5 +7,3 @@ public:
     void apply(MSHSystem* system) override;
     std::string getName() const override;
 };
-
-#endif

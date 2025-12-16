@@ -1,5 +1,4 @@
-#ifndef STATE_H
-#define STATE_H
+#pragma once
 
 #include <string>
 
@@ -11,5 +10,3 @@ public:
     virtual void apply(MSHSystem* system) = 0;
     virtual std::string getName() const = 0;
 };
-
-#endif

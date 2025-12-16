@@ -1,5 +1,4 @@
-#ifndef DEVICE_H
-#define DEVICE_H
+#pragma once
 
 #include <string>
 #include "DeviceStatus.h"
@@ -16,6 +15,11 @@ public:
         : id(id), name(name), isOn(false), status(DeviceStatus::ACTIVE) {}
 
     virtual ~Device() = default;
+
+    int getId() const { return id; }
+    const std::string& getName() const { return name; }
+    bool isOn_status() const { return isOn; }
+    DeviceStatus getStatus() const { return status; }
 
     virtual void turnOn() {
         if (status != DeviceStatus::FAILED) {
@@ -35,5 +39,3 @@ public:
 
     virtual std::string getInfo() const = 0;
 };
-
-#endif

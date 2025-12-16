@@ -1,0 +1,12 @@
+2
+1
+LivingRoom_Light
+80
+2
+Front_Camera
+30
+1080p
+2
+5
+Normal
+0
