@@ -10,54 +10,55 @@ TEAM MEMBER CONTRIBUTIONS
 ================================================================================
 
 1. MAHMOUD JALLOH - Main System Controller
-   ✅ Status: COMPLETE
-   📄 Files: MSHSystem.h, MSHSystem.cpp, main.cpp
-   🎯 Deliverables:
-      • Central system controller with full device management
-      • Menu-driven user interface
-      • Device add/remove/control operations
-      • Integration hub for all subsystems
-      • Event handlers for all operations
+  ✅ Status: COMPLETE
+  📄 Files: MSHSystem.h, MSHSystem.cpp, main.cpp
+  🎯 Deliverables:
+    • Central system controller and overall system navigation
+    • Menu structure and user-facing system navigation
+    • Integration hub coordinating subsystems and event routing
 
-2. BASHIR - Mode Subsystem
-   ✅ Status: COMPLETE
-   📄 Files: Mode.h, NormalMode.h, EveningMode.h, PartyMode.h, CinemaMode.h
-   🎯 Deliverables:
-      • 4 operating modes (Normal, Evening, Party, Cinema)
-      • Strategy pattern implementation
-      • Automatic device configuration per mode
-      • Professional lighting and entertainment presets
+2. ABDULBARI ABDULGHANI AHMED LEFTESI - Device Abstraction & Implementations
+  ✅ Status: COMPLETE
+  📄 Files: Device.h, DeviceManager.h, Light.h, Camera.h, TV.h, MusicSystem.h, SmokeGasDetector.h
+  🎯 Deliverables:
+    • Device abstraction and inheritance hierarchy
+    • Concrete device types: Light, Camera, TV, Smoke & Gas Detector, Music System
+    • Correct use of polymorphism for uniform device control
+    • Factory/registration integration for device creation
 
-3. OMAR - Logging & Monitoring System
-   ✅ Status: COMPLETE
-   📄 Files: Logger.h (NEW)
-   🎯 Deliverables:
-      • Comprehensive logging system with 5 severity levels
-      • ISO 8601 timestamp generation
-      • Dual output (file + console)
-      • Specialized logging methods for devices, modes, states, detections
-      • Log file: msh_system.log
+3. BASHIR ABDULWAHED BASHIR TAYANI - Mode Subsystem
+  ✅ Status: COMPLETE
+  📄 Files: Mode.h, NormalMode.h, EveningMode.h, PartyMode.h, CinemaMode.h
+  🎯 Deliverables:
+    • `Mode` interface and concrete mode variants
+    • Strategy/State pattern implementation for mode behaviour
+    • Mode presets and automatic device configuration
 
-4. ABDULBARI - Detection & Security System
-   ✅ Status: COMPLETE
-   📄 Files: DetectionSystem.h (NEW)
-   🎯 Deliverables:
-      • Multi-type threat detection (Motion, Smoke, Gas, Intrusion)
-      • Detection state management
-      • Active detection tracking by location
-      • Logger system integration
-      • Detection history management
+4. OMAR ABDELSALAM MAHROUS ABDELMOTLEB - Performance States & History
+  ✅ Status: COMPLETE
+  📄 Files: State.h, NormalState.h, SleepState.h, HighPerformanceState.h
+  🎯 Deliverables:
+    • System performance states (Sleep, Normal, HighPerformance)
+    • State transition management and state history mechanism
+    • State-driven device adjustments and logging of transitions
 
-5. ABDULRAUF - Device Enhancements (LLR14/LLR46)
-   ✅ Status: COMPLETE
-   📄 Files: Camera.h, TV.h, MusicSystem.h, SmokeGasDetector.h, Light.h
-   🎯 Deliverables:
-      • Camera with recording and resolution control (LLR14)
-      • TV with source switching and picture modes (LLR14)
-      • Music System with track display and equalizer (LLR14)
-      • Detector with battery monitoring and self-test (LLR46)
-      • Light with color temperature and dimmer support
-      • Professional features for all device classes
+5. ABDULRAUF ABDULHAMID ALSAYD ALSIAD & AHMED ESSALEM - Security & Detection
+  ✅ Status: COMPLETE
+  📄 Files: DetectionSystem.h, DetectionSystem.cpp, SecuritySystem.h, SecuritySystem.cpp
+  🎯 Deliverables:
+    • Joint implementation of the security subsystem
+    • Motion and smoke event handling with alarm integration
+    • Failure/notification mechanisms and escalation paths
+    • Detection-to-alarm linkage and mitigation workflows
+
+6. MOHAMED ASHRAF RAMADAN MOHAMED - Shared Infrastructure
+  ✅ Status: COMPLETE
+  📄 Files: Logger.h, Logger.cpp, ConfigManager.h, DeviceManager.h
+  🎯 Deliverables:
+    • `Logger` (Singleton) with file and console backends
+    • `ConfigManager` (Singleton) for centralized configuration
+    • `DeviceFactory` / `DeviceManager` (Factory Method) for device creation
+    • Shared utilities and infrastructure used across subsystems
 
 ================================================================================
 TECHNICAL SPECIFICATIONS
