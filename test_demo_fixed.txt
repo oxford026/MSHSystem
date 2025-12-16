@@ -1,0 +1,11 @@
+2
+1
+LivingRoom_Light
+80
+
+2
+2
+Front_Camera
+30
+
+0
