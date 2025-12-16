@@ -11,6 +11,11 @@
 #include <limits>
 #include <string>
 
+// In MSHSystem class add / ✅ MSHSystem class 
+// Add these includes at the top if not already there
+#include "AlarmSystem.h"
+#include "SecuritySystem.h"
+
 MSHSystem::MSHSystem()
     : currentMode(SystemMode::Normal),
       currentState(SystemState::Normal),
@@ -77,6 +82,27 @@ void MSHSystem::turnOffNonEssentialDevices() {
     deviceManager.setAllLights(false);
     deviceManager.setAllTVs(false);
     deviceManager.setAllMusicSystems(false);
+}
+
+// In MSHSystem.cpp add these functions / ✅ MSHSystem.cpp : 
+// Handle user alarm acknowledgment / 
+void MSHSystem::handleAlarmAcknowledgment() {
+    alarmSystem.acknowledgeAlarm();
+}
+
+// Check if alarm is active / 
+bool MSHSystem::isAlarmActive() const {
+    return alarmSystem.isAlarmActive();
+}
+
+// Simulate motion event / 
+void MSHSystem::simulateMotionEvent() {
+    securitySystem.simulateMotionDetection();
+}
+
+// Simulate smoke event / 
+void MSHSystem::simulateSmokeEvent() {
+    securitySystem.simulateSmokeDetection();
 }
 
 void MSHSystem::showHomeStatus() const {
@@ -497,3 +523,26 @@ void MSHSystem::handleUserSelection(int selection) {
         std::cout << "Invalid selection. Please try again.\n";
     }
 }
+
+// In mainMenu function add test option / ✅ mainMenu function
+// Add this new function for testing alarms
+void MSHSystem::testAlarmMenu() {
+    std::cout << "\n=== Test Alarm System ===" << std::endl;
+    std::cout << "1. Test Motion Alarm" << std::endl;
+    std::cout << "2. Test Smoke Alarm" << std::endl;
+    std::cout << "3. Acknowledge Alarm" << std::endl;
+    std::cout << "Choice: ";
+
+    char testChoice;
+    std::cin >> testChoice;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    if (testChoice == '1') {
+        simulateMotionEvent();
+    } else if (testChoice == '2') {
+        simulateSmokeEvent();
+    } else if (testChoice == '3') {
+        handleAlarmAcknowledgment();
+    } else {
+        std::cout << "Invalid choice.\n";
+    }

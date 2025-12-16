@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+make_minimum_required(VERSION 3.10)
 
 project(MSHSystem)
 
@@ -19,6 +19,12 @@ add_executable(MSHSystem
     state/NormalState.cpp
     state/SleepState.cpp
     state/HighPerformanceState.cpp
+    # Add these files from the photos:
+    AlarmSystem.cpp
+    SecuritySystem.cpp
+    Logger.cpp
+    ConfigManager.cpp
+    DeviceFactory.cpp
 )
 
 target_include_directories(MSHSystem PRIVATE 
@@ -29,3 +35,12 @@ target_include_directories(MSHSystem PRIVATE
 )
 
 target_link_libraries(MSHSystem PRIVATE devices)
+
+# Windows settings (if using conio.h) / إعدادات الويندوز (إذا كنت تستخدم conio.h)
+if(WIN32)
+    target_compile_definitions(MSHSystem PRIVATE _CONSOLE)
+endif()
+
+# Add thread library
+find_package(Threads REQUIRED)
+target_link_libraries(MSHSystem Threads::Threads)
