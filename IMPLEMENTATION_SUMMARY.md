@@ -246,10 +246,11 @@ Sample log contents:
 | Member | Component | Status |
 |--------|-----------|--------|
 | Mahmoud Jalloh | Main System Controller | ✅ Complete |
-| BASHIR | Mode Subsystem | ✅ Complete |
-| OMAR | Logging & Monitoring | ✅ Complete |
-| ABDULBARI | Detection & Security | ✅ Complete |
-| ABDULRAUF | Device Enhancements | ✅ Complete |
+| Abdulbari Abdulghani Ahmed Leftesi | Device Abstraction & Implementations | ✅ Complete |
+| Bashir Abdulwahed Bashir Tayani | Mode Subsystem | ✅ Complete |
+| Omar Abdelsalam Mahrous Abdelmotleb | Performance States & History | ✅ Complete |
+| Abdulrauf Abdulhamid Alsayd Alsiad & Ahmed Essalem | Security & Detection | ✅ Complete |
+| Mohamed Ashraf Ramadan Mohamed | Shared Infrastructure | ✅ Complete |
 
 ## Validation Checklist
 
@@ -293,10 +294,11 @@ Sample log contents:
 
 All team member tasks have been successfully completed and integrated:
 
-1. **Mahmoud Jalloh**: Core system with full device management
-2. **BASHIR**: Complete mode subsystem with 4 modes and auto-configuration
-3. **OMAR**: Professional logging system with 5 severity levels and dual output
-4. **ABDULBARI**: Comprehensive detection system with 4 detection types
-5. **ABDULRAUF**: Enhanced device classes with LLR14/LLR46 professional features
+1. **Mahmoud Jalloh**: Core system with full device management, menu/navigation, and integration
+2. **Abdulbari Abdulghani Ahmed Leftesi**: Device abstraction and concrete device implementations (Light, Camera, TV, MusicSystem, SmokeGasDetector)
+3. **Bashir Abdulwahed Bashir Tayani**: Mode subsystem and Strategy/State-based mode behaviours
+4. **Omar Abdelsalam Mahrous Abdelmotleb**: Performance states, state transitions, and state history handling
+5. **Abdulrauf Abdulhamid Alsayd Alsiad & Ahmed Essalem**: Joint security subsystem implementation, detection-to-alarm integration, and failure notifications
+6. **Mohamed Ashraf Ramadan Mohamed**: Shared infrastructure (Logger, ConfigManager, DeviceFactory/DeviceManager)
 
 The system compiles cleanly, runs successfully, logs all operations with timestamps, and provides a complete smart home management solution.

@@ -14,238 +14,55 @@ cd /workspaces/MSHSystem
 rm -rf build && mkdir build && cd build
 cmake ..
 make
-```
-
-### Run
-```bash
-cd /workspaces/MSHSystem/build
-./MSHSystem
-```
-
-### View Logs
-```bash
-tail -f /workspaces/MSHSystem/build/msh_system.log
-```
-
----
-
 ## 👥 Team Implementation Matrix
 
-### 1. **Mahmoud Jalloh** - Main System Controller ✅
-**Deliverables**:
-- Central MSHSystem controller
-- Device management interface
-- User menu system
-- Event handlers for all operations
-- System initialization and shutdown
+### 1. Mahmoud Jalloh — Main System Controller
+**Responsibilities**:
+- Overall system navigation and menu structure
+- Central controller (`MSHSystem`) coordinating subsystems
+- Event routing and system lifecycle
 
-**Implementation Files**:
-- `MSHSystem.h` - System interface
-- `MSHSystem.cpp` - Core implementation
-- `main.cpp` - Entry point
+**Primary files**: `MSHSystem.h`, `MSHSystem.cpp`, `main.cpp`
 
-**Key Features**:
-```
-✓ Add/remove/control 5 device types
-✓ Menu-driven interface
-✓ Device status queries
-✓ Mode and state management
-✓ Complete logging integration
-```
+### 2. Abdulbari Abdulghani Ahmed Leftesi — Device Abstraction & Implementations
+**Responsibilities**:
+- Device abstraction, inheritance and polymorphism
+- Concrete device implementations: `Light`, `Camera`, `TV`, `MusicSystem`, `SmokeGasDetector`
+- `DeviceFactory` / `DeviceManager` integration
 
----
+**Primary files**: `modules/devices/Device.h`, `modules/devices/DeviceManager.h`, `modules/devices/Light.h`, `modules/devices/Camera.h`, `modules/devices/TV.h`, `modules/devices/MusicSystem.h`, `modules/devices/SmokeGasDetector.h`
 
-### 2. **BASHIR** - Mode Subsystem ✅
-**Deliverables**:
-- Strategy pattern implementation
-- 4 operating modes
-- Automatic device configuration
-- Mode-specific presets
+### 3. Bashir Abdulwahed Bashir Tayani — Mode Subsystem
+**Responsibilities**:
+- `Mode` interface and concrete mode variants
+- Strategy/State pattern for mode behaviour
+- Mode presets and automatic device configuration
 
-**Implementation Files**:
-- `ModeSubsystem_Bashir/Mode.h` - Interface
-- `ModeSubsystem_Bashir/NormalMode.h`
-- `ModeSubsystem_Bashir/EveningMode.h`
-- `ModeSubsystem_Bashir/PartyMode.h`
-- `ModeSubsystem_Bashir/CinemaMode.h`
+**Primary files**: `ModeSubsystem_Bashir/Mode.h`, `ModeSubsystem_Bashir/NormalMode.h`, `ModeSubsystem_Bashir/EveningMode.h`, `ModeSubsystem_Bashir/PartyMode.h`, `ModeSubsystem_Bashir/CinemaMode.h`
 
-**Modes Implemented**:
-```
-Normal Mode    → Standard operation, all devices available
-Evening Mode   → Dim lights, reduced TV settings
-Party Mode     → Full brightness, music system active
-Cinema Mode    → Lights off, TV focused, door locked
-```
+### 4. Omar Abdelsalam Mahrous Abdelmotleb — Performance States & History
+**Responsibilities**:
+- System performance states (Sleep, Normal, HighPerformance)
+- State transition management and state history
+- State-driven device adjustments and logging
 
----
+**Primary files**: `state/State.h`, `state/NormalState.h`, `state/SleepState.h`, `state/HighPerformanceState.h`
 
-### 3. **OMAR** - Logging & Monitoring System ✅
-**Deliverables**:
-- Comprehensive logging system
-- 5 severity levels
-- ISO 8601 timestamps
-- Dual output (file + console)
-- Specialized logging methods
+### 5. Abdulrauf Abdulhamid Alsayd Alsiad & Ahmed Essalem — Security & Detection
+**Responsibilities**:
+- Joint implementation of security subsystem
+- Motion/smoke/gas/intrusion handling, alarm integration
+- Failure notifications and escalation workflows
 
-**Implementation File**:
-- `Logger.h` - Complete logging system
+**Primary files**: `DetectionSystem.h`, `DetectionSystem.cpp`, `SecuritySystem.h`, `SecuritySystem.cpp`
 
-**Log Levels**:
-```cpp
-DEBUG    → Detailed system information
-INFO     → Normal operations (device add/remove, mode changes)
-WARNING  → Potentially problematic situations (low battery)
-ERROR    → Error conditions
-CRITICAL → System-critical events
-```
+### 6. Mohamed Ashraf Ramadan Mohamed — Shared Infrastructure
+**Responsibilities**:
+- `Logger` (Singleton) and logging integration
+- `ConfigManager` (Singleton) and shared configuration
+- `DeviceFactory`/`DeviceManager` support and common utilities
 
-**Output Format**:
-```
-[2025-12-16 08:01:49] [INFO] Device [Kitchen_TV]: TV device added - Brand: Samsung
-[YYYY-MM-DD HH:MM:SS] [LEVEL] Message
-```
-
-**Specialized Methods**:
-```cpp
-logger.logDeviceAction(name, action)      // Device operations
-logger.logModeChange(mode)                // Mode transitions
-logger.logStateChange(state)              // State changes
-logger.logDetection(type, location)       // Detection events
-logger.logError(device, error)            // Error conditions
-```
-
-**Log File**: `/workspaces/MSHSystem/build/msh_system.log`
-
----
-
-### 4. **ABDULBARI** - Detection & Security System ✅
-**Deliverables**:
-- Multi-type threat detection
-- Detection state management
-- Logger integration
-- Detection history
-
-**Implementation File**:
-- `DetectionSystem.h` - Security system
-
-**Detection Types**:
-```
-MOTION     → Motion detection
-SMOKE      → Smoke detection
-GAS        → Dangerous gas detection
-INTRUSION  → Intrusion detection
-```
-
-**Core Methods**:
-```cpp
-arm()                            // Enable detection
-disarm()                         // Disable detection
-onMotionDetected(location)       // Motion alert
-onSmokeDetected(location)        // Smoke alert
-onGasDetected(location)          // Gas alert
-onIntrusionDetected(location)    // Intrusion alert
-getActiveDetections()            // List active alerts
-clearDetection(index)            // Clear specific alert
-clearAllDetections()             // Clear all alerts
-setLogger(Logger*)               // Logger integration
-```
-
-**Features**:
-```
-✓ Track multiple simultaneous detections
-✓ Store location and timestamp
-✓ Auto-logging to Logger system
-✓ Detection history management
-✓ Arm/disarm toggle
-```
-
----
-
-### 5. **ABDULRAUF** - Device Enhancements (LLR14/LLR46) ✅
-**Deliverables**:
-- Enhanced Light with color control
-- Enhanced Camera with recording (LLR14)
-- Enhanced TV with source switching (LLR14)
-- Enhanced Music System with equalizer (LLR14)
-- Enhanced Detector with battery (LLR46)
-
-#### 5.1 Light Enhancement
-**File**: `modules/devices/Light.h`
-
-**New Features**:
-```cpp
-colorTemperature    // Warm, Neutral, Cool
-dimmerSupport       // Boolean dimmer capability
-setBrightness()     // Adjust brightness 0-100
-setColorTemperature() // Set color temperature
-```
-
-#### 5.2 Camera Enhancement (LLR14)
-**File**: `modules/devices/Camera.h`
-
-**New Features**:
-```cpp
-recording           // Boolean recording state
-resolution          // Video resolution (1080p, 4K, etc.)
-startRecording()    // Begin recording
-stopRecording()     // Stop recording
-setResolution()     // Change resolution
-toggleNightVision() // Toggle night vision
-```
-
-**Professional Capabilities**:
-- Real-time recording state tracking
-- Multiple resolution support
-- Night vision capability
-- Professional surveillance features
-
-#### 5.3 TV Enhancement (LLR14)
-**File**: `modules/devices/TV.h`
-
-**New Features**:
-```cpp
-inputSource         // HDMI source (HDMI1, HDMI2, etc.)
-pictureMode         // Display mode (Standard, Cinema, Game)
-smartFeatures       // Smart TV capabilities
-setVolume()         // Volume control
-setInputSource()    // Switch input
-setPictureMode()    // Change picture mode
-toggleSmartFeatures() // Toggle smart features
-```
-
-**Entertainment Features**:
-- HDMI source switching
-- Picture mode presets
-- Smart TV integration
-
-#### 5.4 Music System Enhancement (LLR14)
-**File**: `modules/devices/MusicSystem.h`
-
-**New Features**:
-```cpp
-currentTrack        // Track name display
-isPlaying           // Playback state
-equalizerMode       // EQ preset (Normal, Bass, Treble)
-play(track)         // Play track
-pause()             // Pause playback
-stop()              // Stop playback
-setEqualizerMode()  // Set EQ mode
-```
-
-**Audio Capabilities**:
-- Track name display
-- EQ mode presets
-- Full playback control
-- Professional audio management
-
-#### 5.5 Smoke & Gas Detector Enhancement (LLR46)
-**File**: `modules/devices/SmokeGasDetector.h`
-
-**New Features**:
-```cpp
-alertActive         // Alert state
-batteryLevel        // 0-100%
-selfTestEnabled     // Self-test status
+**Primary files**: `Logger.h`, `Logger.cpp`, `ConfigManager.h`, `modules/devices/DeviceManager.h`
 triggerAlert()      // Trigger alert
 clearAlert()        // Clear alert
 setBatteryLevel()   // Set battery
