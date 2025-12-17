@@ -7,6 +7,8 @@
 #include "modules/devices/DeviceManager.h"
 #include "Logger.h"
 #include "DetectionSystem.h"
+#include "alarmsystem.h"
+#include "securitysystem.h"
 
 enum class SystemMode {
     Normal,
@@ -53,6 +55,14 @@ public:
     void setPowerSaving(bool enabled);
     void turnOffNonEssentialDevices();
 
+    // Alarm handling
+    void handleAlarmAcknowledgment();
+    bool isAlarmActive() const;
+    void simulateMotionEvent();
+    void simulateSmokeEvent();
+    void testAlarmMenu();
+    void runAutoTest();
+
 private:
     void displayMainMenu();
     void handleUserSelection(int selection);
@@ -73,4 +83,6 @@ private:
     bool powerSaving;
     Logger logger;
     DetectionSystem detectionSystem;
+    AlarmSystem alarmSystem;
+    SecuritySystem securitySystem;
 };

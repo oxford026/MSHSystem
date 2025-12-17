@@ -5,39 +5,43 @@
 #include <memory>
 #include <string>
 #include "Device.h"
-#include "AlarmSystem.h"
+#include "alarmsystem.h"
 #include "Logger.h"
+
+// Forward declarations for device types
+class Camera;
+class SmokeGasDetector;
 
 class SecuritySystem {
 private:
-    std::vector<std::shared_ptr<Camera>> cameras;           // List of cameras / قائمة الكاميرات
-    std::vector<std::shared_ptr<SmokeGasDetector>> detectors; // List of detectors / قائمة الكواشف
-    AlarmSystem alarmSystem;               // Alarm system instance / مثيل نظام الإنذار
-    Logger& logger;                        // Logger reference / مرجع المسجل
-    bool isSecurityActive;                 // Security system status / حالة النظام الأمني
+    std::vector<std::shared_ptr<Camera>> cameras;           // List of cameras
+    std::vector<std::shared_ptr<SmokeGasDetector>> detectors; // List of detectors
+    AlarmSystem alarmSystem;               // Alarm system instance
+    Logger logger;                        // Logger instance
+    bool isSecurityActive;                 // Security system status
     
 public:
-    SecuritySystem();                      // Constructor / المُنشئ
+    SecuritySystem();                      // Constructor
     
-    // Device management / إدارة الأجهزة
+    // Device management
     void addCamera(std::shared_ptr<Camera> camera);
     void addDetector(std::shared_ptr<SmokeGasDetector> detector);
     
-    // Security control / التحكم بالأمان
+    // Security control
     void activateSecurity();
     void deactivateSecurity();
     bool isActive() const;
     
-    // Event detection / كشف الأحداث
+    // Event detection
     void checkForMotion();                 // Check for motion / التحقق من الحركة
-    void checkForSmoke();                  // Check for smoke / التحقق من الدخان
+    void checkForSmoke();                  // Check for smoke
     
-    // Simulation functions / دوال المحاكاة
-    void simulateMotionDetection(int cameraId = 1); // Simulate motion / محاكاة الحركة
-    void simulateSmokeDetection(int detectorId = 1); // Simulate smoke / محاكاة الدخان
+    // Simulation functions
+    void simulateMotionDetection(int cameraId = 1); // Simulate motion
+    void simulateSmokeDetection(int detectorId = 1); // Simulate smoke
     
-    // Emergency response / الاستجابة للطوارئ
-    void callPolice();                     // Call police / الاتصال بالشرطة
+    // Emergency response
+    void callPolice();                     // Call police
 };
 
 #endif

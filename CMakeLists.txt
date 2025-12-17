@@ -1,4 +1,4 @@
-make_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10)
 
 project(MSHSystem)
 
@@ -19,12 +19,8 @@ add_executable(MSHSystem
     state/NormalState.cpp
     state/SleepState.cpp
     state/HighPerformanceState.cpp
-    # Add these files from the photos:
-    AlarmSystem.cpp
-    SecuritySystem.cpp
-    Logger.cpp
-    ConfigManager.cpp
-    DeviceFactory.cpp
+    alarmsystem.cpp
+    securitysystem.cpp
 )
 
 target_include_directories(MSHSystem PRIVATE 
@@ -43,4 +39,4 @@ endif()
 
 # Add thread library
 find_package(Threads REQUIRED)
-target_link_libraries(MSHSystem Threads::Threads)
+target_link_libraries(MSHSystem PRIVATE Threads::Threads)

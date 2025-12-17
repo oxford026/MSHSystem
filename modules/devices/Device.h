@@ -38,4 +38,19 @@ public:
     }
 
     virtual std::string getInfo() const = 0;
+
+    // Change operation mode: active/inactive (not failed)
+    void setActive() {
+        if (status != DeviceStatus::FAILED) {
+            status = DeviceStatus::ACTIVE;
+            isOn = true;
+        }
+    }
+
+    void setInactive() {
+        if (status != DeviceStatus::FAILED) {
+            status = DeviceStatus::INACTIVE;
+            isOn = false;
+        }
+    }
 };

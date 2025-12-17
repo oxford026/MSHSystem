@@ -1,26 +1,27 @@
 
-#include "AlarmSystem.h"
+#include "alarmsystem.h"
 #include "MSHSystem.h"
 #include <iostream>
+#include <memory>
 
-// Global MSHSystem instance (assumed) / مثيل عام لنظام MSH (مفترض)
+// Global MSHSystem instance (assumed)
 extern MSHSystem* globalMSHSystem;
 
-// Constructor implementation / تنفيذ المُنشئ
-AlarmSystem::AlarmSystem() 
-    : isActive(false), isAcknowledged(false), logger(Logger::getInstance()) {
-    std::cout << "Alarm System Initialized / تم تهيئة نظام الإنذار" << std::endl;
+// Constructor implementation
+AlarmSystem::AlarmSystem()
+    : isActive(false), isAcknowledged(false), logger() {
+    std::cout << "Alarm System Initialized" << std::endl;
 }
 
-// Destructor implementation / تنفيذ المُدمِّر
+// Destructor implementation
 AlarmSystem::~AlarmSystem() {
-    stopAllAlarms(); // Stop any running alarms / إيقاف أي إنذارات قيد التشغيل
+    stopAllAlarms(); // Stop any running alarms
     if (alarmThread.joinable()) {
-        alarmThread.join(); // Wait for thread to finish / انتظار انتهاء الخيط
+        alarmThread.join(); // Wait for thread to finish
     }
 }
 
-// Run alarm for specified duration / تشغيل الإنذار لمدة محددة
+// Run alarm for specified duration
 void AlarmSystem::runAlarm(int durationSeconds, const std::string& alarmType) {
     isActive = true;
     isAcknowledged = false;
@@ -28,13 +29,13 @@ void AlarmSystem::runAlarm(int durationSeconds, const std::string& alarmType) {
     std::cout << "\n🚨 ALARM ACTIVATED / تم تفعيل الإنذار: " << alarmType << " alarm for " 
               << durationSeconds << " seconds!" << std::endl;
     
-    // Turn on lights for motion alarm / تشغيل الأضواء في حالة إنذار الحركة
+    // Turn on lights for motion alarm
     if (alarmType == "MOTION") {
         triggerLights(true);
     }
     
-    // Log the event / تسجيل الحدث
-    logger.log("ALARM", alarmType + " alarm started / إنذار " + alarmType + " بدأ", "SUCCESS");
+    // Log the event
+    logger.info(alarmType + " alarm started");
     
     // Start timing the alarm / بدء توقيت الإنذار
     auto startTime = std::chrono::steady_clock::now();
@@ -45,10 +46,10 @@ void AlarmSystem::runAlarm(int durationSeconds, const std::string& alarmType) {
         auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>
                               (currentTime - startTime).count();
         
-        // Stop if user acknowledged / التوقف إذا أقر المستخدم
+        // Stop if user acknowledged
         if (isAcknowledged) {
-            std::cout << "⚠️ Alarm acknowledged by user - Stopping early / تم إقرار الإنذار من قبل المستخدم - إيقاف مبكر" << std::endl;
-            logger.log("ALARM", alarmType + " alarm acknowledged by user / تم إقرار إنذار " + alarmType + " من قبل المستخدم", "SUCCESS");
+            std::cout << "⚠️ Alarm acknowledged by user - Stopping early" << std::endl;
+            logger.info(alarmType + " alarm acknowledged by user");
             break;
         }
         
@@ -57,86 +58,87 @@ void AlarmSystem::runAlarm(int durationSeconds, const std::string& alarmType) {
             break;
         }
         
-        // Alarm sound simulation / محاكاة صوت الإنذار
+        // Alarm sound simulation
         std::cout << "BEEP! ";
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     
-    // Turn off lights after alarm / إطفاء الأضواء بعد الإنذار
+    // Turn off lights after alarm
     if (alarmType == "MOTION") {
         triggerLights(false);
     }
     
     isActive = false;
-    std::cout << "\n✅ Alarm stopped / تم إيقاف الإنذار" << std::endl;
-    logger.log("ALARM", alarmType + " alarm stopped / إنذار " + alarmType + " توقف", "SUCCESS");
+    std::cout << "\n✅ Alarm stopped" << std::endl;
+    logger.info(alarmType + " alarm stopped");
 }
 
-// Control lights during alarm / التحكم بالأضواء أثناء الإنذار
+// Control lights during alarm
 void AlarmSystem::triggerLights(bool turnOn) {
-    if (!globalMSHSystem) return; // Safety check / فحص السلامة
+    if (!globalMSHSystem) return; // Safety check
     
-    auto& devices = globalMSHSystem->getAllDevices();
-    int lightsTriggered = 0; // Counter for triggered lights / عداد للأضواء المشغلة
+    const auto& devices = globalMSHSystem->getDeviceManager().getAllDevices();
+    int lightsTriggered = 0; // Counter for triggered lights
     
-    // Loop through all devices / التكرار عبر جميع الأجهزة
+    // Loop through all devices and handle Lights only
     for (auto& device : devices) {
-        if (device->getType() == "LIGHT" && device->isOperational()) {
+        auto light = std::dynamic_pointer_cast<Light>(device);
+        if (light) {
             if (turnOn) {
-                device->turnOn();
+                light->turnOn();
                 lightsTriggered++;
             } else {
-                device->turnOff();
+                light->turnOff();
             }
         }
     }
     
-    // Print status message / طباعة رسالة الحالة
+    // Print status message
     if (turnOn && lightsTriggered > 0) {
-        std::cout << "💡 " << lightsTriggered << " lights turned ON for alarm / تم تشغيل " << lightsTriggered << " أضواء للإنذار" << std::endl;
+        std::cout << "💡 " << lightsTriggered << " lights turned ON for alarm" << std::endl;
     }
 }
 
 // Activate motion alarm (5 seconds) / تفعيل إنذار الحركة (5 ثواني)
 void AlarmSystem::activateMotionAlarm() {
     if (isActive) {
-        std::cout << "⚠️ Another alarm is already active / إنذار آخر نشط بالفعل" << std::endl;
+        std::cout << "⚠️ Another alarm is already active" << std::endl;
         return;
     }
     
     // Run alarm in separate thread / تشغيل الإنذار في خيط منفصل
     alarmThread = std::thread(&AlarmSystem::runAlarm, this, 5, "MOTION");
-    alarmThread.detach(); // Detach to run in background / فصل للعمل في الخلفية
+    alarmThread.detach(); // Detach to run in background
 }
 
 // Activate smoke alarm (10 seconds) / تفعيل إنذار الدخان (10 ثواني)
 void AlarmSystem::activateSmokeAlarm() {
     if (isActive) {
-        std::cout << "⚠️ Another alarm is already active / إنذار آخر نشط بالفعل" << std::endl;
+        std::cout << "⚠️ Another alarm is already active" << std::endl;
         return;
     }
     
-    std::cout << "\n🔥 SMOKE DETECTED! Press any key to acknowledge alarm... / تم اكتشاف دخان! اضغط أي مفتاح لإقرار الإنذار..." << std::endl;
+    std::cout << "\n🔥 SMOKE DETECTED! Press any key to acknowledge alarm..." << std::endl;
     
     // Run smoke alarm / تشغيل إنذار الدخان
     alarmThread = std::thread(&AlarmSystem::runAlarm, this, 10, "SMOKE");
-    alarmThread.detach(); // Detach thread / فصل الخيط
+    alarmThread.detach(); // Detach thread
 }
 
-// Manually acknowledge/stop alarm / الإقرار اليدوي/إيقاف الإنذار
+// Manually acknowledge/stop alarm
 void AlarmSystem::acknowledgeAlarm() {
     if (isActive && !isAcknowledged) {
         isAcknowledged = true;
-        std::cout << "✅ Alarm acknowledged / تم إقرار الإنذار" << std::endl;
+        std::cout << "✅ Alarm acknowledged" << std::endl;
     }
 }
 
-// Check if alarm is active / التحقق مما إذا كان الإنذار نشطاً
+// Check if alarm is active
 bool AlarmSystem::isAlarmActive() const {
     return isActive;
 }
 
-// Stop all alarms / إيقاف جميع الإنذارات
+// Stop all alarms
 void AlarmSystem::stopAllAlarms() {
     isActive = false;
     isAcknowledged = true;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "Device.h"
 
 // Smoke & Gas Detector
@@ -13,8 +14,11 @@ private:
 
 public:
     SmokeGasDetector(int id, const std::string& name, int sensitivity = 5)
-        : Device(id, name), sensitivity(sensitivity), alertActive(false),
-          batteryLevel(100), selfTestEnabled(false) {}
+                : Device(id, name), sensitivity(sensitivity), alertActive(false),
+                    batteryLevel(100), selfTestEnabled(false) {
+                // Detectors are critical devices and should be powered on by default
+                turnOn();
+        }
 
     // LLR46: Set sensitivity level
     void setSensitivity(int level) {
@@ -64,6 +68,11 @@ public:
 
     void completeSelfTest() {
         selfTestEnabled = false;
+    }
+
+    void turnOff() override {
+        // Prevent powering off detectors; they must remain active
+        std::cout << "Detector cannot be powered off; operation unchanged." << std::endl;
     }
 
     bool isSelftestRunning() const {

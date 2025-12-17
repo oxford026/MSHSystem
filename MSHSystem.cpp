@@ -11,10 +11,10 @@
 #include <limits>
 #include <string>
 
-// In MSHSystem class add / ✅ MSHSystem class 
+// In MSHSystem class add
 // Add these includes at the top if not already there
-#include "AlarmSystem.h"
-#include "SecuritySystem.h"
+#include "alarmsystem.h"
+#include "securitysystem.h"
 
 MSHSystem::MSHSystem()
     : currentMode(SystemMode::Normal),
@@ -84,24 +84,32 @@ void MSHSystem::turnOffNonEssentialDevices() {
     deviceManager.setAllMusicSystems(false);
 }
 
-// In MSHSystem.cpp add these functions / ✅ MSHSystem.cpp : 
-// Handle user alarm acknowledgment / 
+// In MSHSystem.cpp add these functions
+// Handle user alarm acknowledgment
 void MSHSystem::handleAlarmAcknowledgment() {
     alarmSystem.acknowledgeAlarm();
 }
 
-// Check if alarm is active / 
+// Check if alarm is active
 bool MSHSystem::isAlarmActive() const {
     return alarmSystem.isAlarmActive();
 }
 
-// Simulate motion event / 
+// Simulate motion event
 void MSHSystem::simulateMotionEvent() {
     securitySystem.simulateMotionDetection();
 }
 
-// Simulate smoke event / 
+// Simulate smoke event
 void MSHSystem::simulateSmokeEvent() {
+    // Find a registered detector and call simulate with its real ID
+    for (const auto& dev : deviceManager.getAllDevices()) {
+        if (auto det = dynamic_cast<SmokeGasDetector*>(dev.get())) {
+            securitySystem.simulateSmokeDetection(det->getId());
+            return;
+        }
+    }
+    // Fallback to default behavior
     securitySystem.simulateSmokeDetection();
 }
 
@@ -145,7 +153,8 @@ void MSHSystem::addDevice() {
     std::cout << "Enter device name: ";
     std::string name;
     std::getline(std::cin, name);
-
+    // We'll allow creating multiple devices with the same configuration
+    int copies = 0;
     switch (type) {
     case 1: {
         std::cout << "Enter brightness (0-100) [default 50]: ";
@@ -156,6 +165,12 @@ void MSHSystem::addDevice() {
         deviceManager.createLight(name, brightness);
         std::cout << "Light added successfully!\n";
         logger.logDeviceAction(name, "Light device added with brightness " + std::to_string(brightness));
+        std::cout << "Add more with same configuration? (enter number, 0 for none): ";
+        std::cin >> copies;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        for (int i = 0; i < copies; ++i) {
+            deviceManager.createLight(name + " #" + std::to_string(i+1), brightness);
+        }
         break;
     }
     case 2: {
@@ -167,6 +182,12 @@ void MSHSystem::addDevice() {
         deviceManager.createCamera(name, fps);
         std::cout << "Camera added successfully!\n";
         logger.logDeviceAction(name, "Camera device added with FPS " + std::to_string(fps));
+        std::cout << "Add more with same configuration? (enter number, 0 for none): ";
+        std::cin >> copies;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        for (int i = 0; i < copies; ++i) {
+            deviceManager.createCamera(name + " #" + std::to_string(i+1), fps);
+        }
         break;
     }
     case 3: {
@@ -177,6 +198,12 @@ void MSHSystem::addDevice() {
         deviceManager.createTV(name, brand);
         std::cout << "TV added successfully!\n";
         logger.logDeviceAction(name, "TV device added - Brand: " + brand);
+        std::cout << "Add more with same configuration? (enter number, 0 for none): ";
+        std::cin >> copies;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        for (int i = 0; i < copies; ++i) {
+            deviceManager.createTV(name + " #" + std::to_string(i+1), brand);
+        }
         break;
     }
     case 4: {
@@ -188,6 +215,12 @@ void MSHSystem::addDevice() {
         deviceManager.createSmokeGasDetector(name, sensitivity);
         std::cout << "Detector added successfully!\n";
         logger.logDeviceAction(name, "Smoke & Gas Detector added with sensitivity " + std::to_string(sensitivity));
+        std::cout << "Add more with same configuration? (enter number, 0 for none): ";
+        std::cin >> copies;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        for (int i = 0; i < copies; ++i) {
+            deviceManager.createSmokeGasDetector(name + " #" + std::to_string(i+1), sensitivity);
+        }
         break;
     }
     case 5: {
@@ -199,6 +232,12 @@ void MSHSystem::addDevice() {
         deviceManager.createMusicSystem(name, volume);
         std::cout << "Music System added successfully!\n";
         logger.logDeviceAction(name, "Music System added with volume " + std::to_string(volume));
+        std::cout << "Add more with same configuration? (enter number, 0 for none): ";
+        std::cin >> copies;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        for (int i = 0; i < copies; ++i) {
+            deviceManager.createMusicSystem(name + " #" + std::to_string(i+1), volume);
+        }
         break;
     }
     default:
@@ -477,6 +516,7 @@ void MSHSystem::displayMainMenu() {
     std::cout << "6. Change State\n";
     std::cout << "7. Manual\n";
     std::cout << "8. About\n";
+    std::cout << "9. Test Alarm\n";
     std::cout << "0. Exit\n";
     std::cout << "Select: ";
 }
@@ -519,6 +559,10 @@ void MSHSystem::handleUserSelection(int selection) {
         showAbout();
         break;
 
+    case 9:
+        testAlarmMenu();
+        break;
+
     default:
         std::cout << "Invalid selection. Please try again.\n";
     }
@@ -538,11 +582,62 @@ void MSHSystem::testAlarmMenu() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     if (testChoice == '1') {
+        // Ensure at least one camera exists for the motion test
+        bool hasCamera = false;
+        for (const auto& dev : deviceManager.getAllDevices()) {
+            if (dynamic_cast<Camera*>(dev.get())) { hasCamera = true; break; }
+        }
+        if (!hasCamera) {
+            std::cout << "No camera found — creating temporary TestCamera." << std::endl;
+            auto cam = deviceManager.createCamera("TestCamera", 30);
+            securitySystem.addCamera(cam);
+        }
         simulateMotionEvent();
     } else if (testChoice == '2') {
+        // Ensure at least one detector exists for the smoke test
+        bool hasDetector = false;
+        for (const auto& dev : deviceManager.getAllDevices()) {
+            if (dynamic_cast<SmokeGasDetector*>(dev.get())) { hasDetector = true; break; }
+        }
+        if (!hasDetector) {
+            std::cout << "No detector found — creating temporary TestDetector." << std::endl;
+            auto det = deviceManager.createSmokeGasDetector("TestDetector", 5);
+            securitySystem.addDetector(det);
+        }
         simulateSmokeEvent();
     } else if (testChoice == '3') {
         handleAlarmAcknowledgment();
     } else {
         std::cout << "Invalid choice.\n";
     }
+
+}
+
+// Run a deterministic non-interactive self-test
+void MSHSystem::runAutoTest() {
+    std::cout << "\n=== AUTO-TEST: Starting deterministic self-test ===\n";
+    // Create and register devices
+    auto cam = deviceManager.createCamera("AutoCam", 30);
+    securitySystem.addCamera(cam);
+    auto det = deviceManager.createSmokeGasDetector("AutoDet", 5);
+    securitySystem.addDetector(det);
+
+    std::cout << "Created AutoCam (ID " << cam->getId() << ") and AutoDet (ID " << det->getId() << ")\n";
+
+    // Motion alarm test
+    std::cout << "-- Triggering motion alarm (AutoCam) --\n";
+    simulateMotionEvent();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "-- Acknowledging alarm --\n";
+    handleAlarmAcknowledgment();
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    // Smoke alarm test
+    std::cout << "-- Triggering smoke alarm (AutoDet) --\n";
+    simulateSmokeEvent();
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "-- Acknowledging alarm --\n";
+    handleAlarmAcknowledgment();
+
+    std::cout << "=== AUTO-TEST: Completed ===\n";
+}
